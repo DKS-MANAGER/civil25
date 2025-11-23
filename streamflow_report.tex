@@ -1,0 +1,82 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{siunitx}
+\usepackage{caption}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Stochastic Monsoon Streamflow Modeling -- Results}
+\author{(Generated)}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Problem statement}
+The probability of rain $X$ on a given day during the monsoon season at a location is $0.4$. The rainfall depth (mm) on rainy days follows a Gamma distribution with density
+\[
+f_X(x)=\frac{x^{\alpha-1}e^{-x/\beta}}{\Gamma(\alpha)\beta^{\alpha}},\quad x>0,
+\]
+with parameters $\alpha=5$ and $\beta=3$. The surface runoff (mm) on day $t$ is
+\[
+sr_t = d\frac{S_{t-1}}{S_{\max}} x_t,
+\]
+baseflow is
+\[
+bf_t = c S_{t-1},
+\]
+and infiltration is
+\[
+inf_t = a x_t.
+\]
+Parameters used: $d=0.3$, $c=0.5$ (unless changed for part (e)), $a=0.6$, $S_{\max}=500$ mm, initial storage $S_0=100$ mm. A total of 1000 simulations of 120 days were generated.
+
+\section*{Method}
+For each simulation: (1) generate a 120-day rainfall series with daily rain occurrence probability 0.4 and rainy-day amounts sampled from Gamma(5,3); (2) iterate the storage and compute daily surface-runoff, baseflow and infiltration using the given equations; (3) compute daily streamflow $Q_t = sr_t + bf_t$ and record the maximum daily streamflow for the simulation. Repeated for $\beta=3$ (baseline), $\beta=7$, and for $c=0.1$.
+
+\section*{Results}
+Table: summary statistics of the maximum daily streamflow across 1000 simulations.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+Case & Mean (mm) & Std (mm) & Min (mm) & Max (mm) \\
+\midrule
+$\beta=3, c=0.5$ (baseline) & 50.34 & 0.49 & 50.00 & 52.13 \\
+$\beta=7, c=0.5$            & 50.87 & 1.28 & 50.00 & 60.60 \\
+$\beta=3, c=0.1$            & 10.39 & 0.52 & 10.00 & 12.20 \\
+\bottomrule
+\end{tabular}
+\caption{Summary statistics for maximum daily streamflow (1000 simulations, 120 days each).}
+\end{table}
+
+\section*{Discussion}
+Increasing $\beta$ (scale) from 3 to 7 increases the mean rainy-day rainfall from $\alpha\beta=15$ mm to 35 mm, producing more intense events. This increases variability in maximum streamflow and allows for rarer extreme peaks; in the simulations the std of maxima increased notably (0.49 → 1.28 mm). Reducing the baseflow coefficient $c$ from 0.5 to 0.1 dramatically reduces maximum streamflow because baseflow is proportional to storage and contributes substantially to the total streamflow in this model.
+
+\section*{Plot}
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.95\textwidth]{sto4a_fixed_hist.png}
+\caption{Comparison of maximum-daily-streamflow distributions: (left) $\beta=3, c=0.5$; (center) $\beta=7, c=0.5$; (right) $\beta=3, c=0.1$.}
+\end{figure}
+
+\section*{Files}
+The following files were created/used:
+\begin{itemize}
+\item \texttt{sto4a_fixed.m} -- main simulation and analysis script
+\item \texttt{gamrnd_local.m} -- local Gamma sampler used when Statistics Toolbox is unavailable
+\item \texttt{streamflow_results.mat} -- saved numerical results (max streamflows and rainfall arrays)
+\item \texttt{sto4a_fixed_hist.png} -- plot embedded above
+\end{itemize}
+
+\section*{Reproducibility}
+Run the script from MATLAB or using the command-line interface:
+\begin{verbatim}
+cd('c:\\Users\\DKS\\Desktop\\VSC\\sept25')
+matlab -batch "sto4a_fixed"
+\end{verbatim}
+
+\end{document}

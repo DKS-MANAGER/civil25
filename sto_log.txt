@@ -1,0 +1,9 @@
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+1. Setup complete
+2. Parameters initialized
+Error occurred:
+Message: Undefined function 'gamrnd' for input arguments of type 'double'.
+Location: generate_rainfall line 50
